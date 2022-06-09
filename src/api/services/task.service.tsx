@@ -1,19 +1,37 @@
-import { AxiosResponse } from "axios";
-import api from "..";
-import { ITask } from "../../types/task.types";
 
-function getTasks() : Promise<AxiosResponse<ITask[], any>>{
-	return api.get<ITask[]>('/tasks')
-}
+import { createApi } from '@reduxjs/toolkit/query/react';
+import baseQuery from '..';
+import { ITask } from '../../types/task.types';
 
-function createTask(taskName: string) {
-	return api.post('/tasks',{
-		name : taskName,
+
+const tagTypes = ['Tasks']
+
+const taskService = createApi({
+	reducerPath: 'task_service',
+	baseQuery: baseQuery,
+	tagTypes: tagTypes,
+	endpoints: (build) => ({
+		getTasks: build.query<ITask[] ,void>({
+			query: () => ({url : '/tasks'}),
+			providesTags: tagTypes
+		}),
+		createTask: build.mutation<ITask, Partial<ITask>>({
+			query: (body) => ({
+				url : '/tasks',
+				method: 'POST',
+				body,
+			}),
+			invalidatesTags: tagTypes
+		}),
+		deleteTask: build.mutation<void, number>({
+			query: (index) => ({
+				url : `/tasks/${index}`,
+				method: 'DELETE',	
+			}),
+			invalidatesTags: tagTypes,
+		})
 	})
-}
+})
 
-function deleteTask(id: number) {
-	return api.delete(`/tasks/${id}`)
-}
-
-export { getTasks, createTask, deleteTask }
+export const { useGetTasksQuery, useCreateTaskMutation, useDeleteTaskMutation } = taskService
+export default taskService

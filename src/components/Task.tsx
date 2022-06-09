@@ -1,6 +1,14 @@
-import { ITaskProps } from "../types/task.types"
+import { useDeleteTaskMutation, useGetTasksQuery } from "../api/services/task.service"
+import Loading from "./Loading"
 
-function Tasks({ tasks, removeTask }: ITaskProps) {
+function Tasks() {
+	const { data: tasks = [] } = useGetTasksQuery()
+	const [ deleteTask, { isLoading }] = useDeleteTaskMutation()
+
+	const removeTask = (id: number) => deleteTask(id)
+
+	if (isLoading ) return <Loading/>
+	
 	return (
 		<div>
 			{

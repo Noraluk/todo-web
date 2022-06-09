@@ -1,7 +1,7 @@
-import axios from 'axios'
+import { fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-const api = axios.create({
-	baseURL: "http://localhost:8080" 
-});
+const baseQuery = fetchBaseQuery({
+	baseUrl: 'http://localhost:8080',
+})
 
-export default api
+export default baseQuery

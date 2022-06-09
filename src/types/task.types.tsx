@@ -6,9 +6,4 @@ interface ITask {
 	updated_at?: Date,
 }
 
-interface ITaskProps {
-	tasks: Array<ITask>
-	removeTask: (id: number) => void
-}
-
-export type { ITask, ITaskProps }
+export type { ITask }
